@@ -12,12 +12,17 @@ drawing = [];
 points = [];
 
 function init() {
-  var imageSrc = "https://via.placeholder.com/150";
+  var imageSrc = "./body.jpg";
   backgroundImage = new Image();
   backgroundImage.src = imageSrc;
   canvas = document.getElementById("can");
+  backgroundImage.onload = function() {
+    canvas.height = backgroundImage.height;
+    canvas.width = backgroundImage.width;
+  };
   finalImg = document.getElementById("finalImg");
   canvasimg = document.getElementById("canvasimg");
+
   canvas.style.backgroundImage = "url('" + imageSrc + "')";
   canvas.addEventListener("mousemove", handleMouseEvent);
   canvas.addEventListener("mousedown", handleMouseEvent);
