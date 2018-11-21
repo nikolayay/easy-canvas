@@ -1,0 +1,162 @@
+<html>
+  <script type="text/javascript">
+    // globals
+    var canvas, canvasimg, backgroundImage, finalImg;
+    var mouseClicked = false;
+    var prevX = 0;
+    var currX = 0;
+    var prevY = 0;
+    var currY = 0;
+    var fillStyle = "black";
+    var globalCompositeOperation = "source-over";
+    var lineWidth = 7;
+    points = [];
+
+    function init() {
+      var imageSrc = "https://via.placeholder.com/150";
+      backgroundImage = new Image();
+      backgroundImage.src = imageSrc;
+      canvas = document.getElementById("can");
+      finalImg = document.getElementById("finalImg");
+      canvasimg = document.getElementById("canvasimg");
+      canvas.style.backgroundImage = "url('" + imageSrc + "')";
+      canvas.addEventListener("mousemove", handleMouseEvent);
+      canvas.addEventListener("mousedown", handleMouseEvent);
+      canvas.addEventListener("mouseup", handleMouseEvent);
+      canvas.addEventListener("mouseout", handleMouseEvent);
+    }
+
+    function setColor(btn) {
+      globalCompositeOperation = "source-over";
+      if (btn.getAttribute("data-color") == "eraser") {
+        globalCompositeOperation = "destination-out";
+        fillStyle = "rgba(0,0,0,1)";
+      }
+    }
+
+    function setBrushSize(btn) {
+      const newLineWidth = btn.getAttribute("data-lineWidth");
+      if (newLineWidth) {
+        lineWidth = newLineWidth;
+      }
+    }
+
+    function drawCircle(x, y) {
+      var ctx = canvas.getContext("2d");
+      ctx.beginPath;
+      ctx.arc(x, y, lineWidth / 2, 0, 2 * Math.PI);
+      ctx.fillStyle = "black";
+      ctx.fill();
+    }
+
+    function draw(dot) {
+      var ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.globalCompositeOperation = globalCompositeOperation;
+      if (dot) {
+        ctx.fillStyle = fillStyle;
+        drawCircle(currX, currY);
+      } else {
+        ctx.beginPath();
+        ctx.lineJoin = ctx.lineCap = "round";
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        ctx.strokeStyle = fillStyle;
+        ctx.lineWidth = lineWidth;
+        ctx.stroke();
+      }
+      ctx.closePath();
+    }
+
+    function erase() {
+      if (confirm("Want to clear")) {
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById("canvasimg").style.display = "none";
+      }
+    }
+
+    function handleMouseEvent(e) {
+      if (e.type === "mousedown") {
+        prevX = currX;
+        prevY = currY;
+        currX = e.offsetX;
+        currY = e.offsetY;
+        mouseClicked = true;
+        draw(true);
+      }
+      if (e.type === "mouseup" || e.type === "mouseout") {
+        mouseClicked = false;
+        points.length = 0;
+      }
+      if (e.type === "mousemove") {
+        if (mouseClicked) {
+          prevX = currX;
+          prevY = currY;
+          currX = e.offsetX;
+          currY = e.offsetY;
+          draw();
+        }
+      }
+    }
+  </script>
+
+  <body onload="init()">
+    <canvas
+      id="can"
+      width="400"
+      height="400"
+      style="position:absolute;top:10%;left:10%;border:2px solid;"
+    >
+    </canvas>
+    <div style="position:absolute;top:12%;left:43%;">
+      Pen
+      <div
+        style="width:17px;height:17px;background:black;"
+        data-color="black"
+        onclick="setColor(this)"
+      ></div>
+    </div>
+
+    <div style="position:absolute;top:25%;left:43%;">
+      Eraser
+      <div
+        style="width:15px;height:15px;background:white;border:2px solid;"
+        data-color="eraser"
+        onclick="setColor(this)"
+      ></div>
+    </div>
+
+    <div style="position:absolute;top:38%;left:43%;">
+      Brush Size
+      <div style="display:flex; flex-direction: row">
+        <div
+          style="margin-right:3px;width:7px;height:7px;background:white;border:2px solid;"
+          data-lineWidth="7"
+          onclick="setBrushSize(this)"
+        ></div>
+        <div
+          style="margin-right:3px;width:15px;height:15px;background:white;border:2px solid;"
+          data-lineWidth="15"
+          onclick="setBrushSize(this)"
+        ></div>
+        <div
+          style="margin-right:3px;width:30px;height:30px;background:white;border:2px solid;"
+          data-lineWidth="30"
+          onclick="setBrushSize(this)"
+        ></div>
+        <div
+          style="margin-right:3px;width:50px;height:50px;background:white;border:2px solid;"
+          data-lineWidth="50"
+          onclick="setBrushSize(this)"
+        ></div>
+      </div>
+    </div>
+
+    <canvas id="canvasimg" style="display:none;"></canvas>
+    <img
+      id="finalImg"
+      style="position:absolute;top:10%;left:52%;display:none;"
+    />
+  </body>
+</html>
