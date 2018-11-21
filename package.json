@@ -1,0 +1,23 @@
+{
+  "name": "canvas",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikolayay/easy-canvas.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nikolayay/easy-canvas/issues"
+  },
+  "homepage": "https://github.com/nikolayay/easy-canvas#readme",
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "lodash": "^4.17.11"
+  }
+}
