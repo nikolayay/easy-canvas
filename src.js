@@ -77,17 +77,20 @@ function erase() {
 
 // Redraw everything from points
 function trace() {
+  globalCompositeOperation = "source-over";
   var ctx = canvas.getContext("2d");
-
   ctx.beginPath();
-  ctx.strokeStyle = "red";
+  ctx.globalCompositeOperation = globalCompositeOperation;
+
   for (var i = 0; i < drawing.length; i++) {
     let points = drawing[i];
-    ctx.moveTo(points[0].x, points[0].y);
-    for (var j = 0; j < points.length; j++) {
-      ctx.lineTo(points[j].x, points[j].y);
+    if (points.length) {
+      ctx.moveTo(points[0].x, points[0].y);
+      for (var j = 0; j < points.length; j++) {
+        ctx.lineTo(points[j].x, points[j].y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
   }
   ctx.closePath();
 }
@@ -99,9 +102,11 @@ function handleMouseEvent(e) {
     currX = e.offsetX;
     currY = e.offsetY;
 
-    // Log points and append to total
-    let newPoint = { x: currX, y: currY };
-    points.push(newPoint);
+    // Log points and append to total only if mode isnt the eraser
+    if (globalCompositeOperation === "source-over") {
+      let newPoint = { x: currX, y: currY };
+      points.push(newPoint);
+    }
     mouseClicked = true;
     draw(true);
   }
@@ -130,8 +135,10 @@ function handleMouseEvent(e) {
       currY = e.offsetY;
 
       // Log points and append to total
-      let newPoint = { x: currX, y: currY };
-      points.push(newPoint);
+      if (globalCompositeOperation === "source-over") {
+        let newPoint = { x: currX, y: currY };
+        points.push(newPoint);
+      }
       draw();
     }
   }
