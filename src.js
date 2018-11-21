@@ -75,15 +75,21 @@ function erase() {
   }
 }
 
+// Redraw everything from points
 function trace() {
+  var ctx = canvas.getContext("2d");
+
+  ctx.beginPath();
+  ctx.strokeStyle = "red";
   for (var i = 0; i < drawing.length; i++) {
     let points = drawing[i];
-    console.log(points.length);
+    ctx.moveTo(points[0].x, points[0].y);
     for (var j = 0; j < points.length; j++) {
-      console.log("tracing");
-      console.log(points[j]);
+      ctx.lineTo(points[j].x, points[j].y);
     }
+    ctx.stroke();
   }
+  ctx.closePath();
 }
 
 function handleMouseEvent(e) {
@@ -102,16 +108,17 @@ function handleMouseEvent(e) {
   if (e.type === "mouseup") {
     mouseClicked = false;
     // Add the drawn points to total drawing
-    drawing.push(points);
+    drawing.push(clone(points));
+
+    // ------- Move below to testfile ----------
     let drawingLength = 0;
     for (var i = 0; i < drawing.length; i++) {
       drawingLength = drawingLength + drawing[i].length;
     }
-
     const totalLength = points.length + drawingLength;
-
     console.assert(totalLength === points.length + drawingLength);
-    console.assert(drawing[0]);
+    // ------------------------------------------
+
     points.length = 0;
   }
   if (e.type === "mousemove") {

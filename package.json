@@ -19,5 +19,8 @@
   "devDependencies": {
     "jest": "^23.6.0",
     "lodash": "^4.17.11"
+  },
+  "dependencies": {
+    "clone": "^2.1.2"
   }
 }
